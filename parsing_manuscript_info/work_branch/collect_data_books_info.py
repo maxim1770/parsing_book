@@ -17,12 +17,19 @@ def collect_data_books_info(headers):
         data = json.load(json_file)
 
     # -----
+    if not os.path.exists("data/data_books_info"):
+        os.mkdir("data/data_books_info/books_info")
+    if not os.path.exists("data/data_books_info/all_books_info"):
+        os.mkdir("data/data_books_info/all_books_info")
+    if not os.path.exists("data/data_books_info/books_info"):
+        os.mkdir("data/data_books_info/books_info")
+    # -----
     if not os.path.exists("data/pages_books"):
         os.mkdir("data/pages_books")
     # -----
 
     cur_time = datetime.datetime.now().strftime("%d_%m_%Y_%H_%M")
-    with open(f'data/data_books_info/books_info_{cur_time}.json', "w", encoding='utf-8') as json_file:
+    with open(f'data/data_books_info/all_books_info/all_books_info_{cur_time}.json', "w", encoding='utf-8') as json_file:
         pass
 
     # -----
@@ -90,7 +97,18 @@ def collect_data_books_info(headers):
 
         collect_data_book_info(src=src)
 
-        with open(f'data/data_books_info/books_info_{cur_time}.json', "a", encoding="utf-8") as json_file:
+        if not os.path.exists(f"data/data_books_info/books_info/{title_book_eng_for_link}"):
+            os.mkdir(f"data/data_books_info/books_info/{title_book_eng_for_link}")
+
+        with open(
+                f"data/data_books_info/books_info/{title_book_eng_for_link}/info_{cur_time}_{title_book_eng_for_link}.json",
+                "w",
+                encoding="utf-8"
+                ) as json_file:
+            json.dump(data_book_info, json_file, indent=4, ensure_ascii=False)
+
+        with open(f'data/data_books_info/all_books_info/all_books_info_{cur_time}.json', "a",
+                  encoding="utf-8") as json_file:
             json.dump(data_book_info, json_file, indent=4, ensure_ascii=False)
 
         # -----
@@ -107,9 +125,6 @@ def collect_data_book_info(src):
 
 
 def main():
-    if not os.path.exists("data/data_books_info"):
-        os.mkdir("data/data_books_info")
-
     headers = {
         'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.160 YaBrowser/22.5.4.904 Yowser/2.5 Safari/537.36",
     }
